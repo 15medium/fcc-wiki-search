@@ -1,0 +1,86 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Wiki Search</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="style.css">
+	
+	<style>
+		.randwiki a:link, .randwiki a:hover, .randwiki a:active, .randwiki a:visited{
+			text-decoration: none;
+			color:#ddd;
+		}
+		.randwiki{
+			padding-bottom: 20px;
+		}
+		ul{
+			list-style-type: none;
+			text-align:left;
+		}
+		li {
+			background: #fff;
+			padding:5px 25px;
+		}
+		a{
+			text-decoration: none;
+		}
+		a:hover{
+			text-decoration: none;
+			color:#064a74;
+		}
+	</style>
+
+</head>
+<body>
+
+	<script>
+		$(document).ready(function() {
+			$("form").on("submit", function(e) {
+				e.preventDefault();
+				var input = $("#searchInput").val();
+				$.getJSON('https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=' + encodeURIComponent(input) + '&prop=extracts&exlimit=10&exintro&exsentences=2&format=json&callback=?', function(response) {
+					var pages = response.query.pages;
+					$("#list").empty();
+					for (var id in pages) {
+						$("#list").append('<a target="_blank" href="http://en.wikipedia.org/?curid=' + id + '"><li class="show"><h3><strong>' + pages[id].title + "</strong></h3>" +
+							"<p>" + pages[id].extract + "</p>" + "</li></a><br>");
+					};
+				});
+			});
+		});
+
+	</script>
+
+	<div class="container-fluid">
+
+		<div class="row text-center">
+			<h1>Wiki Search</h1>
+		</div>
+
+		<div class="row text-center">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<form>
+					<label class="h4" style="padding-right:10px;">Click icon to search</label>
+					<input type="text" class="search-focus form-control2" name="searchInput" id="searchInput" placeholder="Search Wikipedia" value="" />
+				</form>
+				<h4 class="randwiki">  or <a href="https://en.wikipedia.org/wiki/Special:Random" target="_blank">click here</a> for a random search</h4>
+				<ul id = "list"></ul>
+			</div>
+		</div>
+
+		<div class="row text-center">
+			<div class="col-md-4"></div>
+			<div class="col-md-4">
+				<h6 style="color:#ccc;">15medium</h6>
+			</div>
+			<div class="col-md-4"></div>
+		</div>
+
+	</div>
+
+</body>
+</html>
